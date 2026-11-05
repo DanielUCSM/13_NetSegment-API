@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app import __version__
 from app.schemas import AggregateRequest, FLSMRequest, VLSMRequest
@@ -10,6 +13,14 @@ app = FastAPI(
     version=__version__,
     description="Planificacion IPv4 mediante FLSM, VLSM y agregacion CIDR exacta.",
 )
+
+FRONTEND = Path(__file__).resolve().parents[1] / "frontend"
+app.mount("/assets", StaticFiles(directory=FRONTEND / "assets"), name="assets")
+
+
+@app.get("/", include_in_schema=False)
+def frontend():
+    return FileResponse(FRONTEND / "index.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.exception_handler(NetworkError)

@@ -7,6 +7,20 @@
 ![Estado](https://img.shields.io/badge/versi%C3%B3n-1.0.0-green)
 ![API](https://img.shields.io/badge/tipo-REST%20API-blueviolet)
 
+## Frontend web y demostración
+
+El proyecto incluye una interfaz propia para **FLSM, VLSM y CIDR**, conectada a la API real. Permite cargar ejemplos, editar segmentos, visualizar la distribución IPv4, buscar resultados y exportar CSV o JSON. El historial de parámetros se guarda únicamente en el navegador.
+
+Después de instalar las dependencias de Python, ejecutar desde la raíz:
+
+```bash
+python -m app
+```
+
+Abrir **http://127.0.0.1:8000/**. Frontend y backend se ejecutan juntos: la interfaz usa HTML, CSS y JavaScript local, sin necesitar Node.js, npm, compilación ni CDN para funcionar. Usar **Cargar ejemplo → Calcular** en cada herramienta para la demostración.
+
+Ver [instalación en Linux y Windows, guía de demostración y pruebas](docs/FRONTEND.md).
+
 ---
 
 ## Descripción
@@ -283,13 +297,13 @@ Por seguridad, **nunca deberán almacenarse en GitHub**:
 ## 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/DanielUCSM/X_NetSegment-API.git
+git clone https://github.com/DanielUCSM/13_NetSegment-API.git
 ```
 
 Ingresar al proyecto:
 
 ```bash
-cd X_NetSegment-API
+cd 13_NetSegment-API
 ```
 
 ### Resultado esperado
@@ -426,6 +440,8 @@ http://127.0.0.1:8000
 ---
 
 ## 9. Verificar el funcionamiento
+
+La interfaz principal está disponible en **http://127.0.0.1:8000/**. Cargar un ejemplo y calcular para verificar su conexión con el backend. Los recursos de esta interfaz son locales y no necesitan acceso a un CDN.
 
 La documentación interactiva de FastAPI está disponible en:
 

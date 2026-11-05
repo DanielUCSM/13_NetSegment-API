@@ -31,7 +31,7 @@ El objetivo del sistema es producir planes de direccionamiento IPv4 válidos a p
 
 Los usuarios previstos son estudiantes, docentes, administradores de redes y desarrolladores de herramientas de infraestructura. La solución es un microservicio backend stateless: recibe JSON, realiza el cálculo y responde sin almacenar sesiones ni resultados. No configura routers, no descubre dispositivos y no modifica redes reales.
 
-La versión 1.0.0 implementa IPv4. Aunque el título original del dossier menciona IPv4/IPv6, el contrato proporcionado solo define operaciones IPv4 y el soporte IPv6 no está implementado. La interfaz cliente incluida es Swagger UI; no hay aplicación móvil, escritorio o frontend propio.
+La versión 1.0.0 implementa IPv4. Aunque el título original del dossier menciona IPv4/IPv6, el contrato proporcionado solo define operaciones IPv4 y el soporte IPv6 no está implementado. La interfaz web propia permite ejecutar las tres operaciones desde formularios, consultar resultados y exportarlos; se sirve junto con FastAPI. Swagger UI continúa disponible como cliente técnico alternativo.
 
 ## c Arquitectura y tecnologías utilizadas
 
@@ -221,9 +221,9 @@ Resultado esperado: reinicio automático ante cambios. Este comando usa argument
 
 ### e9 Ejecutar la interfaz cliente
 
-Abrir http://127.0.0.1:8000/docs en un navegador. La página se sirve desde FastAPI y no requiere ejecutar un frontend separado. Seleccionar una ruta POST, pulsar Try it out, escribir el JSON del ejemplo y pulsar Execute. /redoc ofrece otra vista de documentación y /openapi.json entrega el contrato.
+Abrir http://127.0.0.1:8000/ en un navegador con JavaScript habilitado. FastAPI sirve la interfaz propia desde frontend/ y los recursos locales desde /assets/. No se necesita ejecutar otro servidor, instalar Node.js ni compilar el cliente. Elegir FLSM, VLSM o CIDR, completar los datos o pulsar Cargar ejemplo y ejecutar el cálculo. La guía actualizada de interfaz, demostración y pruebas está en docs/FRONTEND.md.
 
-Resultado esperado: rutas visibles y respuestas de la API en la misma página. Si la interfaz no carga por falta de acceso al CDN, comprobar /health y /openapi.json y utilizar curl o scripts propios como clientes alternativos. Una aplicación cliente futura requerirá su propio procedimiento; no forma parte de esta versión.
+Resultado esperado: formularios y resultados del backend real en la misma página, exportaciones CSV/JSON e historial local de parámetros. La interfaz principal funciona sin CDN. La documentación técnica alternativa sigue disponible en /docs y /redoc; estas páginas de documentación utilizan su CDN, y /openapi.json entrega el contrato sin interfaz.
 
 ### e10 Comprobar disponibilidad y operaciones
 
@@ -302,7 +302,7 @@ python -m pytest -q
 python -m pip check
 ```
 
-Resultado esperado para esta versión: 37 pruebas correctas y dependencias sin conflictos. Se comprueban los ejemplos, límites de hosts, capacidad insuficiente, ausencia de solapamientos, rechazo de entradas inválidas, comportamiento HTTP y agregación exacta. El cliente de pruebas puede emitir una advertencia de deprecación de Starlette sobre httpx; en la verificación registrada no produjo fallos.
+Resultado esperado con la interfaz incorporada: 44 pruebas correctas y dependencias sin conflictos. Se mantienen las 37 pruebas originales de cálculos y contrato, y se añaden siete pruebas de integración del frontend. Las pruebas de JavaScript y navegador se describen en docs/FRONTEND.md. Se comprueban los ejemplos, límites de hosts, capacidad insuficiente, ausencia de solapamientos, rechazo de entradas inválidas, comportamiento HTTP y agregación exacta. El cliente de pruebas puede emitir una advertencia de deprecación de Starlette sobre httpx; en la verificación registrada no produjo fallos.
 
 La instalación de requirements-dev.txt también se verificó en un entorno virtual nuevo para comprobar la resolución de dependencias desde los archivos entregados. Las comprobaciones HTTP se realizaron con un proceso Uvicorn real. No se midieron carga, concurrencia máxima ni latencia y no se realizó una auditoría de seguridad.
 

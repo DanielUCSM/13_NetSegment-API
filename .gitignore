@@ -16,3 +16,6 @@ credentials.json
 secrets.json
 .DS_Store
 *.log
+node_modules/
+test-results/
+playwright-report/

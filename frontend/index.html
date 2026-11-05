@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#142b2a">
+  <meta name="description" content="Planifica redes IPv4 con FLSM, VLSM y agregación CIDR. Calcula, compara y exporta tu direccionamiento.">
+  <title>NetSegment · Planificador IPv4</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script type="module" src="/assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Ir a la calculadora</a>
+  <aside class="sidebar" aria-label="Barra lateral">
+    <a class="brand" href="#flsm" aria-label="NetSegment, inicio">
+      <span class="brand-mark"><svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M7 7h14v14H7zM7 7l14 14M21 7L7 21" stroke="currentColor" stroke-width="1.5"/><path d="M3 3h8v8H3zM17 3h8v8h-8zM3 17h8v8H3zM17 17h8v8h-8z" fill="currentColor"/></svg></span>
+      <span>NetSegment<span class="brand-sub">NETWORK PLANNING</span></span>
+    </a>
+    <div class="mobile-tools"><button id="mobile-history" type="button" aria-expanded="false" aria-controls="history-list">Recientes</button><button id="mobile-guide" type="button" aria-label="Abrir guía">?</button></div>
+    <div class="workspace-label"><span class="workspace-avatar">N</span><span>Espacio de trabajo<small>Planificación de redes IPv4</small></span><span class="workspace-dot"></span></div>
+    <p class="nav-label">HERRAMIENTAS</p>
+    <nav class="tool-nav" aria-label="Calculadoras">
+      <a href="#flsm" data-mode="flsm" aria-current="page"><span class="nav-icon">▦</span><span>Subnetting FLSM<small>Subredes del mismo tamaño</small></span><span class="nav-arrow">›</span></a>
+      <a href="#vlsm" data-mode="vlsm"><span class="nav-icon">▤</span><span>Subnetting VLSM<small>Un bloque para cada necesidad</small></span><span class="nav-arrow">›</span></a>
+      <a href="#cidr" data-mode="cidr"><span class="nav-icon">⊞</span><span>Agregación CIDR<small>Varias rutas, una superred</small></span><span class="nav-arrow">›</span></a>
+    </nav>
+    <div class="history-heading"><p class="nav-label">RECIENTES</p><button id="clear-history" class="text-button" type="button">Borrar</button></div>
+    <div id="history-list" class="history-list"><p class="history-empty">Tus cálculos aparecerán aquí.</p></div>
+    <div class="sidebar-bottom">
+      <button id="guide-button" type="button" class="guide-link"><span>?</span> Guía de las herramientas <span>↗</span></button>
+      <div class="course-label"><span class="school-avatar">13</span><span>Computación en Red III<small>UCSM · Grupo 13</small></span></div>
+    </div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumb">Espacio de trabajo <span>/</span> <strong id="breadcrumb-mode">Subnetting FLSM</strong></div><button id="connection" class="connection" type="button" title="Comprobar conexión con el servicio"><span class="status-dot"></span><span id="connection-label">Comprobando servicio</span></button></header>
+    <main id="workspace">
+      <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> PLANIFICA CON PRECISIÓN</div><h1 id="page-title">Cada subred, en su lugar.</h1><p id="page-description">Divide una red IPv4 en bloques iguales y obtén todo tu direccionamiento.</p></div><span class="ip-badge">IPv4 <span>32 bits</span></span></div>
+      <section class="intro-strip" aria-label="Herramienta seleccionada"><span class="tool-number" id="tool-number">01</span><div><h2 id="tool-title">Subnetting FLSM</h2><p id="tool-description">Una máscara. Subredes de igual capacidad.</p></div><span class="algorithm-tag" id="algorithm-tag">FIXED LENGTH</span></section>
+      <div class="calculator-layout">
+        <section class="card input-card" aria-labelledby="input-title">
+          <div class="card-heading"><div><span class="section-kicker">01 / ENTRADA</span><h2 id="input-title">Configura tu red</h2></div><button id="example-button" class="example-button" type="button"><span aria-hidden="true">↗</span> Cargar ejemplo</button></div>
+          <form id="calculator-form" novalidate>
+            <div id="flsm-fields" class="mode-fields">
+              <label for="flsm-network">Red base <span class="label-hint">CIDR</span></label>
+              <input id="flsm-network" name="network" class="mono" type="text" placeholder="192.168.10.0/24" autocomplete="off" spellcheck="false" required aria-describedby="flsm-network-hint">
+              <p class="field-hint" id="flsm-network-hint">Usa la dirección de red y su prefijo, por ejemplo /24.</p>
+              <label for="flsm-count">Subredes que necesitas</label>
+              <div class="number-input"><input id="flsm-count" name="subnets_needed" type="number" min="1" max="4096" step="1" placeholder="4" required><span>subredes</span></div>
+              <p class="field-hint">Entre 1 y 4 096. El resultado completa una potencia de dos.</p>
+            </div>
+            <div id="vlsm-fields" class="mode-fields" hidden>
+              <label for="vlsm-network">Red base <span class="label-hint">CIDR</span></label>
+              <input id="vlsm-network" class="mono" type="text" placeholder="172.16.0.0/22" autocomplete="off" spellcheck="false" required aria-describedby="vlsm-network-hint">
+              <p class="field-hint" id="vlsm-network-hint">El bloque que distribuirás entre tus segmentos.</p>
+              <div class="segments-heading"><label>Segmentos de red</label><span id="segments-count" class="count-tag">1 segmento</span></div>
+              <div class="segments-labels" aria-hidden="true"><span>Nombre</span><span>Hosts</span><span></span></div>
+              <div id="departments"></div>
+              <button type="button" id="add-department" class="add-row">＋ Añadir segmento</button>
+              <p class="field-hint">Se asignan de mayor a menor demanda. Máximo 1 024 segmentos.</p>
+            </div>
+            <div id="cidr-fields" class="mode-fields" hidden>
+              <label for="cidr-networks">Redes a agregar <span class="label-hint">CIDR</span></label>
+              <textarea id="cidr-networks" class="mono" rows="7" placeholder="192.168.0.0/24&#10;192.168.1.0/24&#10;192.168.2.0/24&#10;192.168.3.0/24" autocomplete="off" spellcheck="false" required aria-describedby="cidr-hint"></textarea>
+              <p class="field-hint" id="cidr-hint">Una red por línea, hasta 4 096. También puedes separarlas por comas.</p>
+              <div class="note-box"><span aria-hidden="true">ⓘ</span><p>Las redes deben formar una única superred exacta: contiguas, alineadas y sin solapamientos.</p></div>
+            </div>
+            <div id="form-error" class="error-message" role="alert" hidden></div>
+            <button id="calculate-button" class="primary-button" type="submit"><span id="calculate-label">Calcular subredes</span><span id="calculate-icon" aria-hidden="true">→</span></button>
+            <button id="reset-button" class="reset-button" type="button">Limpiar formulario</button>
+          </form>
+          <div class="input-footer"><span class="tiny-lock" aria-hidden="true">◇</span> Los cálculos se procesan sin guardar datos en el servidor.</div>
+        </section>
+        <section id="results-card" class="card results-card" aria-labelledby="results-title" aria-busy="false">
+          <div class="card-heading"><div><span class="section-kicker">02 / RESULTADO</span><h2 id="results-title">Tu plan de direccionamiento</h2></div><span id="result-state" class="result-state">Sin calcular</span></div>
+          <div id="empty-state" class="empty-state"><div class="network-illustration" aria-hidden="true"><svg viewBox="0 0 240 150" fill="none"><path d="M120 48v28M48 107V76h144v31M120 76v31" stroke="#9bb2aa" stroke-width="1.5" stroke-dasharray="4 4"/><rect x="90" y="12" width="60" height="36" rx="7" fill="#e9f1ed" stroke="#669887"/><rect x="24" y="107" width="48" height="30" rx="6" fill="#f5f8f6" stroke="#a8bfb4"/><rect x="96" y="107" width="48" height="30" rx="6" fill="#f5f8f6" stroke="#a8bfb4"/><rect x="168" y="107" width="48" height="30" rx="6" fill="#f5f8f6" stroke="#a8bfb4"/><circle cx="104" cy="30" r="3" fill="#45866d"/><path d="M114 30h22M37 122h22M109 122h22M181 122h22" stroke="#8da99b" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Tu próxima red empieza aquí</h3><p>Completa los datos y calcula tu plan.<br>O carga un ejemplo para explorar el resultado.</p><div class="empty-pills"><span>Direcciones</span><span>Máscaras</span><span>Rangos de hosts</span></div></div>
+          <div id="loading-state" class="loading-state" role="status" hidden><span class="spinner"></span><p>Calculando tu direccionamiento…</p></div>
+          <div id="results-content" hidden>
+            <div id="result-summary" class="result-summary"></div>
+            <div id="result-note" class="result-note" hidden></div>
+            <div class="visualization-heading"><h3 id="visualization-title">Distribución del bloque</h3><span id="visualization-meta" class="mono"></span></div>
+            <div id="network-map" class="network-map"></div><div id="map-legend" class="map-legend"></div>
+            <div class="result-toolbar"><div><h3 id="table-title">Subredes calculadas</h3><span id="table-count" class="table-count"></span></div><div class="export-actions"><button type="button" id="export-csv" title="Descargar todas las filas en CSV">↓ CSV</button><button type="button" id="export-json" title="Descargar solicitud y resultado en JSON">↓ JSON</button><button type="button" id="print-result" title="Imprimir o guardar como PDF">Imprimir</button></div></div>
+            <label for="result-search" class="sr-only">Buscar en los resultados</label><input id="result-search" class="search-input" type="search" placeholder="Buscar una red o un segmento…" autocomplete="off">
+            <div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de direccionamiento"><table id="result-table"><thead></thead><tbody></tbody></table></div>
+            <div id="table-pagination" class="table-pagination"><span id="page-info"></span><div><button type="button" id="previous-page" aria-label="Página anterior">←</button><button type="button" id="next-page" aria-label="Página siguiente">→</button></div></div>
+            <details class="json-details"><summary>Ver solicitud y respuesta JSON</summary><button id="copy-json" type="button" class="copy-button">Copiar JSON</button><pre id="json-output" class="mono"></pre></details>
+          </div>
+        </section>
+      </div>
+      <section class="learning-card" aria-label="Información de la herramienta"><span class="learning-icon" aria-hidden="true">↳</span><div><h2 id="learning-title">Una red, bloques del mismo tamaño.</h2><p id="learning-text">FLSM toma bits de la parte de host para crear subredes iguales. Se reservan las direcciones de red y broadcast; cada subred debe admitir al menos dos hosts.</p></div><span class="learning-abbr" id="learning-abbr">FLSM</span></section>
+      <footer class="page-footer"><span>NetSegment <span class="footer-dot">·</span> Diseña redes con claridad.</span><span>IPv4 <span class="footer-dot">/</span> FLSM · VLSM · CIDR <span class="footer-dot">/</span> <a href="/docs" target="_blank" rel="noopener">Documentación API ↗</a></span></footer>
+    </main>
+  </div>
+  <dialog id="guide-dialog" aria-labelledby="guide-title"><div class="dialog-heading"><span class="section-kicker">GUÍA RÁPIDA</span><button id="close-guide" type="button" aria-label="Cerrar guía">×</button></div><h2 id="guide-title">Elige cómo distribuir tu red.</h2><section><h3>01 · FLSM</h3><p>Divide una red en bloques iguales. Una /24 dividida en cuatro genera cuatro /26 con 62 hosts utilizables cada una. Si pides tres bloques, obtienes cuatro para completar la partición.</p></section><section><h3>02 · VLSM</h3><p>Asigna bloques según los hosts de cada segmento. El servicio ordena las demandas de mayor a menor y comprueba que todas quepan en la red base.</p></section><section><h3>03 · CIDR</h3><p>Agrega redes en una única superred exacta. Las redes deben cubrir completamente ese bloque, sin huecos, duplicados ni solapamientos.</p></section><p class="guide-footnote">Esta versión trabaja con IPv4. Introduce siempre una dirección de red válida: 192.168.10.0/24, por ejemplo. FLSM y VLSM utilizan bloques convencionales hasta /30.</p></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><div class="noscript">Activa JavaScript en tu navegador para utilizar las calculadoras.</div></noscript>
+</body>
+</html>
